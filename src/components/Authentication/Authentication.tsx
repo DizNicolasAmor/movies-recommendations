@@ -1,30 +1,30 @@
 import React, { FC, useState } from 'react';
-import { createUserWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
+import { Box, Button, Typography } from '@mui/material';
+import { User, createUserWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
 import setupFirebase from '../../utils/firebase';
 
 const Authentication: FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [name, setName] = useState<string | null>();
+  const [user, setUser] = useState<User | null>();
   const { auth, googleAuthProvider } = setupFirebase();
 
   const handleSubmit = async () => {
     await createUserWithEmailAndPassword(auth, email, password)
-      .then((data) => setName(data.user.email))
+      .then((data) => setUser(data.user))
       .catch(console.error);
   };
 
   const handleGoogleLogin = async () => {
     await signInWithPopup(auth, googleAuthProvider)
-      .then((data) => setName(data.user.email))
+      .then((data) => setUser(data.user))
       .catch(console.error);
   };
 
   const logout = async () => {
     await signOut(auth)
-      .then((data) => {
-        console.log(data);
-        setName(null);
+      .then(() => {
+        setUser(null);
       })
       .catch(console.error);
   };
@@ -39,15 +39,18 @@ const Authentication: FC = () => {
   };
 
   return (
-    <div>
-      <h1> {name} </h1>
-      <div className="email">
+    <Box sx={{ textAlign: 'center' }}>
+      <Typography component="h1" sx={{ m: 3 }} variant="h3">
+        Login
+      </Typography>
+      <Typography sx={{ m: 3 }}>Hello {user?.displayName || 'user'}</Typography>
+      <Box className="email">
         <label htmlFor="email">
           Email Address
           <input id="email" type="text" name="email" value={email} onChange={handleInputChange} />
         </label>
-      </div>
-      <div className="password">
+      </Box>
+      <Box className="password">
         <label htmlFor="password">
           Password
           <input
@@ -58,11 +61,28 @@ const Authentication: FC = () => {
             onChange={handleInputChange}
           />
         </label>
-      </div>
-      <button onClick={handleSubmit}>Submit</button>
-      <button onClick={handleGoogleLogin}>Sign-in with Google</button>
-      <button onClick={logout}>Logout</button>
-    </div>
+      </Box>
+      <Button
+        onClick={handleSubmit}
+        sx={{ display: 'block', mx: 'auto', my: 3 }}
+        variant="outlined"
+      >
+        Submit
+      </Button>
+      {user ? (
+        <Button onClick={logout} sx={{ display: 'block', mx: 'auto', my: 3 }} variant="outlined">
+          Logout
+        </Button>
+      ) : (
+        <Button
+          onClick={handleGoogleLogin}
+          sx={{ display: 'block', mx: 'auto', my: 3 }}
+          variant="outlined"
+        >
+          Sign in with Google
+        </Button>
+      )}
+    </Box>
   );
 };
 

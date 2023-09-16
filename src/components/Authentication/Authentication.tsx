@@ -39,7 +39,7 @@ const Authentication: FC = () => {
   };
 
   return (
-    <Box sx={{ textAlign: 'center' }}>
+    <Box data-testid="authentication" sx={{ textAlign: 'center' }}>
       <Typography component="h1" sx={{ m: 3 }} variant="h3">
         Login
       </Typography>

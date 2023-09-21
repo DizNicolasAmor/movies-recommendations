@@ -1,1 +1,1 @@
-export * as Login from './Login';
+export * from './Login';

@@ -1,42 +1,46 @@
 import React, { FC } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+import { Box, Button, TextField, Typography } from '@mui/material';
+
+export type TypeFormData = {
+  email: string;
+  password: string;
+};
 
 export interface Props {
-  handleLogin: () => void;
+  handleLogin: SubmitHandler<TypeFormData>;
   handleLoginWithGoogle: () => void;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Login: FC<Props> = ({ handleLogin, handleLoginWithGoogle }) => {
+export const Login: FC<Props> = ({ handleLogin, handleLoginWithGoogle }) => {
+  const { handleSubmit, control } = useForm<TypeFormData>();
+
   return (
     <Box data-testid="authentication" sx={{ textAlign: 'center' }}>
       <Typography component="h1" sx={{ m: 3 }} variant="h3">
         Login
       </Typography>
-      {/*
-      <Typography sx={{ m: 3 }}>Hello {user?.displayName || 'user'}</Typography>
-      <Box className="email">
-        <label htmlFor="email">
-          Email Address
-          <input id="email" type="text" name="email" value={email} onChange={handleInputChange} />
-        </label>
-      </Box>
-      <Box className="password">
-        <label htmlFor="password">
-          Password
-          <input
-            id="password"
-            type="password"
-            name="password"
-            value={password}
-            onChange={handleInputChange}
-          />
-        </label>
-      </Box>
-      <Button onClick={handleLogin} sx={{ display: 'block', mx: 'auto', my: 3 }} variant="outlined">
-        Submit
-      </Button>
-      */}
+
+      <form onSubmit={handleSubmit(handleLogin)}>
+        <Controller
+          name="email"
+          control={control}
+          defaultValue=""
+          render={({ field }) => <TextField {...field} label="Email" variant="outlined" />}
+        />
+        <Controller
+          name="password"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <TextField {...field} type="password" label="Password" variant="outlined" />
+          )}
+        />
+        <Button type="submit" variant="contained" color="primary">
+          Submit
+        </Button>
+      </form>
+
       <Button
         onClick={handleLoginWithGoogle}
         sx={{ display: 'block', mx: 'auto', my: 3 }}
@@ -47,5 +51,3 @@ const Login: FC<Props> = ({ handleLogin, handleLoginWithGoogle }) => {
     </Box>
   );
 };
-
-export default Login;

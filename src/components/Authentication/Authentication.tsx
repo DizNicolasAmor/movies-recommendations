@@ -1,6 +1,8 @@
 import React, { FC, useState } from 'react';
 import { Box } from '@mui/material';
+import { toast } from 'react-toastify';
 import { User, createUserWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
+import { FirebaseError } from 'firebase/app';
 import { Login } from '../Login';
 
 import setupFirebase from '../../utils/firebase';
@@ -12,13 +14,19 @@ const Authentication: FC = () => {
   const handleLogin = async ({ email, password }: { email: string; password: string }) => {
     await createUserWithEmailAndPassword(auth, email, password)
       .then((data) => setUser(data.user))
-      .catch(console.error);
+      .catch((err: Error | FirebaseError) => {
+        const message = `Login error: ${err instanceof FirebaseError ? err.code : err.message}`;
+        toast(message, { type: 'error' });
+      });
   };
 
   const handleLoginWithGoogle = async () => {
     await signInWithPopup(auth, googleAuthProvider)
       .then((data) => setUser(data.user))
-      .catch(console.error);
+      .catch((err: Error | FirebaseError) => {
+        const message = `Login error: ${err instanceof FirebaseError ? err.code : err.message}`;
+        toast(message, { type: 'error' });
+      });
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -27,7 +35,10 @@ const Authentication: FC = () => {
       .then(() => {
         setUser(null);
       })
-      .catch(console.error);
+      .catch((err: Error | FirebaseError) => {
+        const message = `Logout error: ${err instanceof FirebaseError ? err.code : err.message}`;
+        toast(message, { type: 'error' });
+      });
   };
 
   return (

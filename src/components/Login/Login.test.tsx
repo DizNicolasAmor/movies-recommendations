@@ -1,7 +1,7 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
 import { render } from '../../test-utils';
-import Login, { Props } from './Login';
+import { Login, Props } from './Login';
 
 describe('Login', () => {
   const testProps: Props = {

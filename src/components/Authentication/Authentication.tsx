@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { toast } from 'react-toastify';
 import { User, createUserWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
@@ -29,7 +29,6 @@ const Authentication: FC = () => {
       });
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const logout = async () => {
     await signOut(auth)
       .then(() => {
@@ -44,7 +43,11 @@ const Authentication: FC = () => {
   return (
     <Box data-testid="authentication" sx={{ textAlign: 'center' }}>
       {user ? (
-        <Box>Log out</Box>
+        <Box>
+          <Button onClick={logout} sx={{ display: 'block', mx: 'auto', my: 3 }} variant="outlined">
+            Log out
+          </Button>
+        </Box>
       ) : (
         <Login handleLogin={handleLogin} handleLoginWithGoogle={handleLoginWithGoogle} />
       )}

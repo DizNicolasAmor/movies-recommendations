@@ -33,17 +33,30 @@ export const Login: FC<Props> = ({ handleLogin, handleLoginWithGoogle }) => {
           control={control}
           defaultValue=""
           render={({ field }) => (
-            <TextField {...field} type="password" label="Password" variant="outlined" />
+            <TextField
+              {...field}
+              type="password"
+              label="Password"
+              sx={{ display: 'block', mx: 'auto', my: 1, width: '250px' }}
+              variant="outlined"
+            />
           )}
         />
-        <Button type="submit" variant="contained" color="primary">
+        <Button
+          color="primary"
+          sx={{ display: 'block', mx: 'auto', my: 1, p: 1 }}
+          type="submit"
+          variant="contained"
+        >
           Submit
         </Button>
       </form>
 
+      <Typography sx={{ mx: 'auto', my: 1 }}>or</Typography>
+
       <Button
         onClick={handleLoginWithGoogle}
-        sx={{ display: 'block', mx: 'auto', my: 3 }}
+        sx={{ display: 'block', mx: 'auto', my: 1, p: 1 }}
         variant="outlined"
       >
         Sign in with Google

@@ -10,6 +10,13 @@ import setupFirebase from '../../utils/firebase';
 const Authentication: FC = () => {
   const [user, setUser] = useState<User | null>();
   const { auth, googleAuthProvider } = setupFirebase();
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleLogin = async ({ email, password }: { email: string; password: string }) => {
     await createUserWithEmailAndPassword(auth, email, password)
@@ -49,8 +56,14 @@ const Authentication: FC = () => {
           </Button>
         </Box>
       ) : (
-        <Login handleLogin={handleLogin} handleLoginWithGoogle={handleLoginWithGoogle} />
+        <Button onClick={handleOpen}>Log in</Button>
       )}
+      <Login
+        handleClose={handleClose}
+        handleLogin={handleLogin}
+        handleLoginWithGoogle={handleLoginWithGoogle}
+        open={open}
+      />
     </Box>
   );
 };

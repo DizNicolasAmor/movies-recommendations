@@ -1,26 +1,22 @@
-/* Redux Toolkit allows param reasign since it uses the Immer library */
-/* eslint-disable no-param-reassign */
+import { User } from 'firebase/auth';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { createSlice, Draft, PayloadAction } from '@reduxjs/toolkit';
-
-const initialState = {
-  address: '',
-  balance: '',
-};
+const initialState: User | null = null;
 
 export const userSlice = createSlice({
+  /* Redux Toolkit allows param reasign since it uses the Immer library */
+  /* eslint-disable no-param-reassign, @typescript-eslint/no-unused-vars */
   name: 'user',
   initialState,
   reducers: {
-    resetUser: (state: Draft<typeof initialState>) => {
-      state.address = '';
-      state.balance = '';
+    resetUser: (state) => {
+      state = null;
     },
-    setUser: (state: Draft<typeof initialState>, action: PayloadAction<typeof initialState>) => {
-      state.address = action.payload.address;
-      state.balance = action.payload.balance;
+    setUser: (state, action: PayloadAction<typeof initialState>) => {
+      state = action.payload;
     },
   },
+  /* eslint-enable no-param-reassign, @typescript-eslint/no-unused-vars */
 });
 
 // Selectors

@@ -7,7 +7,7 @@ import { getUser } from '../../redux/slices/user.slice';
 export interface Props {}
 
 export const Header: FC<Props> = () => {
-  const { balance } = useSelector(getUser);
+  const user = useSelector(getUser);
 
   return (
     <Container maxWidth="lg" sx={{ flexGrow: 1 }}>
@@ -19,11 +19,7 @@ export const Header: FC<Props> = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Movies recommendations
           </Typography>
-          {balance ? (
-            <Button color="inherit">Logout</Button>
-          ) : (
-            <Button color="inherit">Login</Button>
-          )}
+          {user ? <Button color="inherit">Logout</Button> : <Button color="inherit">Login</Button>}
         </Toolbar>
       </AppBar>
     </Container>

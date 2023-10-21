@@ -1,14 +1,17 @@
-import React, { FC, useState } from 'react';
-import { Box, Button } from '@mui/material';
+import React, { FC } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { User, createUserWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
+import { Button } from '@mui/material';
+import { createUserWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import { Login } from '../Login';
-
 import setupFirebase from '../../utils/firebase';
+import { TypeUser, getUser, resetUser, setUser } from '../../redux/slices/user.slice';
 
 const Authentication: FC = () => {
-  const [user, setUser] = useState<User | null>();
+  const dispatch = useDispatch();
+  const user = useSelector(getUser);
+
   const { auth, googleAuthProvider } = setupFirebase();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
@@ -19,44 +22,57 @@ const Authentication: FC = () => {
   };
 
   const handleLogin = async ({ email, password }: { email: string; password: string }) => {
-    await createUserWithEmailAndPassword(auth, email, password)
-      .then((data) => setUser(data.user))
-      .catch((err: Error | FirebaseError) => {
-        const message = `Login error: ${err instanceof FirebaseError ? err.code : err.message}`;
-        toast(message, { type: 'error' });
-      });
+    try {
+      const data = await createUserWithEmailAndPassword(auth, email, password);
+      const newUser: TypeUser = {
+        displayName: data.user.displayName,
+        email: data.user.email,
+        uid: data.user.uid,
+      };
+      dispatch(setUser(newUser));
+      handleClose();
+    } catch (err) {
+      const message = err instanceof FirebaseError ? `Login error: ${err.code}` : 'Login error';
+      toast(message, { type: 'error' });
+    }
   };
 
   const handleLoginWithGoogle = async () => {
-    await signInWithPopup(auth, googleAuthProvider)
-      .then((data) => setUser(data.user))
-      .catch((err: Error | FirebaseError) => {
-        const message = `Login error: ${err instanceof FirebaseError ? err.code : err.message}`;
-        toast(message, { type: 'error' });
-      });
+    try {
+      const data = await signInWithPopup(auth, googleAuthProvider);
+      const newUser: TypeUser = {
+        displayName: data.user.displayName,
+        email: data.user.email,
+        uid: data.user.uid,
+      };
+      dispatch(setUser(newUser));
+      handleClose();
+    } catch (err) {
+      const message = err instanceof FirebaseError ? `Login error: ${err.code}` : 'Login error';
+      toast(message, { type: 'error' });
+    }
   };
 
-  const logout = async () => {
-    await signOut(auth)
-      .then(() => {
-        setUser(null);
-      })
-      .catch((err: Error | FirebaseError) => {
-        const message = `Logout error: ${err instanceof FirebaseError ? err.code : err.message}`;
-        toast(message, { type: 'error' });
-      });
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      await dispatch(resetUser());
+    } catch (err) {
+      const message = err instanceof FirebaseError ? `Logout error: ${err.code}` : 'Logout error';
+      toast(message, { type: 'error' });
+    }
   };
 
   return (
-    <Box data-testid="authentication" sx={{ textAlign: 'center' }}>
-      {user ? (
-        <Box>
-          <Button onClick={logout} sx={{ display: 'block', mx: 'auto', my: 3 }} variant="outlined">
-            Log out
-          </Button>
-        </Box>
+    <>
+      {user.uid ? (
+        <Button onClick={handleLogout} variant="contained">
+          Log out
+        </Button>
       ) : (
-        <Button onClick={handleOpen}>Log in</Button>
+        <Button onClick={handleOpen} variant="contained">
+          Log in
+        </Button>
       )}
       <Login
         handleClose={handleClose}
@@ -64,7 +80,7 @@ const Authentication: FC = () => {
         handleLoginWithGoogle={handleLoginWithGoogle}
         open={open}
       />
-    </Box>
+    </>
   );
 };
 

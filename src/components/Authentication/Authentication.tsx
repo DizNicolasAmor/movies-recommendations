@@ -63,14 +63,19 @@ const Authentication: FC = () => {
     }
   };
 
+  const styleButton = {
+    border: '1px solid white',
+    boxShadow: 'none',
+  };
+
   return (
     <>
       {user.uid ? (
-        <Button onClick={handleLogout} variant="contained">
+        <Button onClick={handleLogout} sx={styleButton} variant="contained">
           Log out
         </Button>
       ) : (
-        <Button onClick={handleOpen} variant="contained">
+        <Button onClick={handleOpen} sx={styleButton} variant="contained">
           Log in
         </Button>
       )}

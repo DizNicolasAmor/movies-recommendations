@@ -5,8 +5,10 @@ import { Login, Props } from './Login';
 
 describe('Login', () => {
   const testProps: Props = {
+    handleClose: jest.fn(),
     handleLogin: jest.fn(),
     handleLoginWithGoogle: jest.fn(),
+    open: true,
   };
 
   test('renders correctly', () => {

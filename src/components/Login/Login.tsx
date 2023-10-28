@@ -20,7 +20,6 @@ export const Login: FC<Props> = ({ handleClose, handleLogin, handleLoginWithGoog
   return (
     <Modal open={open} onClose={handleClose} aria-labelledby="modal-login-title">
       <Box
-        data-testid="authentication"
         sx={{
           background: '#FFF',
           borderRadius: '3px',

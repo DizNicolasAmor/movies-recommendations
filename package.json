@@ -9,7 +9,7 @@
     "prettier:check": "prettier --check .",
     "prettier:write": "prettier --write .",
     "test": "jest",
-    "test:cov": "jest --coverage",
+    "test:coverage": "jest --coverage",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
